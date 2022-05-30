@@ -25,9 +25,16 @@ configure_file(
   ${PROJECT_SOURCE_DIR}/config/config.h.in
   ${PROJECT_BINARY_DIR}/src/umap/config.h)
 
-include_directories ( "${CMAKE_SOURCE_DIR}/src" "${CMAKE_BINARY_DIR}/src")
-
 add_subdirectory(src)
+
+target_include_directories(umap PUBLIC
+  $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/src>
+  $<BUILD_INTERFACE:${CMAKE_CURRENT_BINARY_DIR}/src>
+)
+target_include_directories(umap-static PUBLIC
+  $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/src>
+  $<BUILD_INTERFACE:${CMAKE_CURRENT_BINARY_DIR}/src>
+)
 
 if (ENABLE_TESTS)
   set(STATIC_UMAP_LINK ${ENABLE_TESTS_LINK_STATIC_UMAP} CACHE BOOL "Linking option for Umap binaries" FORCE)

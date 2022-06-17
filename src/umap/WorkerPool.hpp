@@ -23,7 +23,7 @@ namespace Umap {
     WorkType type;
   };
 
-  static std::ostream& operator<<(std::ostream& os, const Umap::WorkItem& b)
+  inline std::ostream& operator<<(std::ostream& os, const Umap::WorkItem& b)
   {
     os << "{ page_desc: " << b.page_desc;
 
@@ -46,7 +46,7 @@ namespace Umap {
       WorkerPool(const std::string& pool_name, uint64_t num_threads)
         :   m_pool_name(pool_name)
           , m_num_threads(num_threads)
-          , m_wq(new WorkQueue<WorkItem>(num_threads))
+          , m_wq(new WorkQueue<WorkItem>(static_cast<int>(num_threads)))
       {
         if (m_pool_name.length() > 15)
           m_pool_name.resize(15);

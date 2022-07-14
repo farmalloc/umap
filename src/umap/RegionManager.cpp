@@ -6,6 +6,7 @@
 //////////////////////////////////////////////////////////////////////////////
 #include "umap/config.h"
 
+#include <bit>
 #include <cstdint>        // uint64_t
 #include <fstream>        // for reading meminfo
 #include <mutex>
@@ -229,6 +230,14 @@ RegionManager::set_umap_page_size( uint64_t page_size )
     UMAP_ERROR("Specified page size (" << page_size
         << ") must be a multiple of the system page size ("
         << get_system_page_size() << ")");
+  }
+
+  //
+  // Must be power of two
+  //
+  if ( !std::has_single_bit(page_size) ) {
+    UMAP_ERROR("Specified page size (" << page_size
+        << ") must be power of two");
   }
 
   UMAP_LOG(Debug,

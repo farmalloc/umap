@@ -136,7 +136,7 @@ std::vector<PageDescriptor*> Buffer::evict_oldest_pages()
   size_t num_busy_pages = m_busy_pages.size();
   if( num_busy_pages>0 ){
     size_t i = num_busy_pages - 1;
-    for(; (i>=0 && num_evicted_pages<max_num_evicted_pages); i--){
+    for(; (i<num_busy_pages && num_evicted_pages<max_num_evicted_pages); i--){
         PageDescriptor* pd = m_busy_pages[i];
         if( !pd->deferred && pd->state == PageDescriptor::State::PRESENT ){
           m_stats.pages_deleted++;

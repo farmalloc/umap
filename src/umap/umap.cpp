@@ -179,15 +179,18 @@ umap_ex(
     UMAP_ERROR("Invalid flags: " << std::hex << flags);
   }
 
-  //
-  // When dealing with umap-page-sizes that could be multiples of the actual
-  // system-page-size, it is possible for mmap() to provide a region that is on
-  // a system-page-boundary, but not necessarily on a umap-page-size boundary.
-  //
-  // We always allocate an additional umap-page-size set of bytes so that we can
-  // make certain that the umap-region begins on a umap-page-size boundary.
-  //
-  uint64_t mmap_size = region_size + umap_psize;
+  uint64_t mmap_size = region_size;
+  if ( !(flags & UMAP_FIXED) ) {
+    //
+    // When dealing with umap-page-sizes that could be multiples of the actual
+    // system-page-size, it is possible for mmap() to provide a region that is on
+    // a system-page-boundary, but not necessarily on a umap-page-size boundary.
+    //
+    // We always allocate an additional umap-page-size set of bytes so that we can
+    // make certain that the umap-region begins on a umap-page-size boundary.
+    //
+    mmap_size += umap_psize;
+  }
 
   void* mmap_region = mmap(region_addr, mmap_size,
                         prot, flags | (MAP_ANONYMOUS | MAP_NORESERVE), -1, 0);
